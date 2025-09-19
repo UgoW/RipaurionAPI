@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
+from services.url import json_result
 
 app = FastAPI()
 
@@ -27,7 +28,8 @@ def check_website(url: str):
     return {"url": url, "status": "checked"}
 
 @app.post("/check")
-def check_website_post(payload: dict):
+async def check_website_post(payload: dict):
     print("Received payload:", payload)
     url = payload.get("url")
-    return {"url": url, "urlstatus": "safe"}
+    print(await json_result(url))
+    return await json_result(url)
