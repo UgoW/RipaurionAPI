@@ -1,29 +1,5 @@
 # services/url/service.py
 from urllib.parse import urlparse
-from . import dom  
-
-
-async def json_result(url: str) -> dict:
-    features = {
-        "UrlLength": url_length(url),
-        "PathLevel": path_level(url),
-        "NumDash": num_dash(url),
-        "NumDashInHostname": num_dash_in_hostname(url),
-        "TildeSymbol": has_tilde_symbol(url),
-        "NumUnderscore": num_underscore(url),
-        "SubdomainLevel": sub_domain_level(url),
-        "NumPercent": num_percent(url),
-        "NumQueryComponents": num_query_components(url),
-        "NumHash": num_hash(url),
-        "NumNumericChars": num_numeric_chars(url),
-        "NumDots": num_dots(url),
-        "NumAmpersand": num_ampersand(url),
-        "HttpsInHostname": uses_https(url),
-        "DomainInSubdomains": domain_in_subdomain(url),
-        "DomainInPaths": domain_in_path(url),
-        "PctExtHyperlinks": await dom_features(url),
-    }
-    return features
 
 
 # --- Feature functions ---
@@ -80,6 +56,7 @@ def num_dots(url: str) -> int:
 def num_ampersand(url: str) -> int:
     return url.count('&')
 
+
 def uses_https(url: str) -> int:
     """Retourne 1 si HTTPS, sinon 0"""
     return 1 if url.startswith("https://") else 0
@@ -108,3 +85,32 @@ async def dom_features(url: str) -> dict:
         return round(external_ratio, 2)
     
 
+def at_symbol(url: str) -> int:
+    return 1 if '@' in url else 0
+
+def uses_http(url: str) -> int:
+    return 1 if url.startswith("http://") else 0
+
+def is_ip_address(url) -> int:
+    parsed = urlparse(url)
+    if parsed.hostname:
+        parts = parsed.hostname.split('.')
+        if len(parts) == 4 and all(part.isdigit() and 0 <= int(part) <= 255 for part in parts):
+            return 1
+    return 0
+
+def hostname_length(url: str) -> int:
+    parsed = urlparse(url)
+    return len(parsed.hostname) if parsed.hostname else 0
+
+def path_length(url: str) -> int:
+    parsed = urlparse(url)
+    return len(parsed.path) if parsed.path else 0
+
+def query_length(url: str) -> int:
+    parsed = urlparse(url)
+    return len(parsed.query) if parsed.query else 0
+
+def double_slash_in_path(url: str) -> int:
+    parsed = urlparse(url)
+    return 1 if '//' in parsed.path else 0

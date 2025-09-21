@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
-from services.url import json_result
+from utils import json_result
 
 app = FastAPI()
 
