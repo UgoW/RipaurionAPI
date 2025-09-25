@@ -3,3 +3,5 @@ uvicorn[standard]
 pydantic
 beautifulsoup4
 httpx
+whois
+dnspython

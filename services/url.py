@@ -114,3 +114,8 @@ def query_length(url: str) -> int:
 def double_slash_in_path(url: str) -> int:
     parsed = urlparse(url)
     return 1 if '//' in parsed.path else 0
+
+
+def is_punycode(url: str) -> int:
+    parsed = urlparse(url)
+    return 1 if parsed.hostname and parsed.hostname.startswith('xn--') else 0

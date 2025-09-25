@@ -1,28 +1,28 @@
 
+from services.network import *
 from services.url import *  
+from services.dom import *
 
 async def json_result(url: str) -> dict:
     features = {
-        "NumDots": num_dots(url),
-        "SubdomainLevel": sub_domain_level(url),
-        "PathLevel": path_level(url),
-        "UrlLength": url_length(url),
-        "NumDash": num_dash(url),
-        "NumDashInHostname": num_dash_in_hostname(url),
-        "AtSymbol": at_symbol(url),
-        "TildeSymbol": has_tilde_symbol(url),
-        "NumUnderscore": num_underscore(url),
-        "NumPercent": num_percent(url),
-        "NumQueryComponents": num_query_components(url),
-        "NumAmpersand": num_ampersand(url),
-        "NumHash": num_hash(url),
-        "NumNumericChars": num_numeric_chars(url),
-        "NoHttps": uses_http(url),
-        "IpAddress": is_ip_address(url),
         "HttpsInHostname": uses_https(url),
-        "HostnameLength": hostname_length(url),
-        "PathLength": path_length(url),
+        "UrlLength": url_length(url),
+        "SubdomainLevel": sub_domain_level(url),
+        "DomainAge": domain_age(domaine_extract(url)),
+        "IpAddress": is_ip_address(url),
+        "Punycode": is_punycode(url),
+        "form_mismatch": form_mismatch(url),
+        "CertificateAge": cert_age_days(url),
+        "NbExternalLinks": external_link_ratio(url),
         "QueryLength": query_length(url),
-        "DoubleSlashInPath": double_slash_in_path(url),
+        "TTL": ttl(domaine_extract(url)), 
+        "Redirects": redirects(url),
     }
     return features
+
+
+def domaine_extract(url: str) -> str:
+    ext = tldextract.extract(url)
+    if ext.domain and ext.suffix:
+        return f"{ext.domain}.{ext.suffix}"
+    return urlparse(url).netloc

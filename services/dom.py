@@ -39,3 +39,19 @@ def external_link_ratio(base_url: str, html: str) -> float:
         except Exception:
             continue
     return external / len(links) * 100
+
+
+def form_mismatch(url: str) -> int:
+    try:
+        html = fetch_html(url)
+        soup = BeautifulSoup(html, "html.parser")
+        forms = soup.find_all("form", action=True)
+        for form in forms:
+            action = form["action"]
+            action_url = urljoin(url, action)
+            if get_registered_domain(action_url) != get_registered_domain(url):
+                return 1
+        return 0
+    except Exception as e:
+        print(f"Error fetching or parsing HTML for {url}: {e}")
+        return 0
