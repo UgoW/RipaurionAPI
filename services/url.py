@@ -91,13 +91,16 @@ def at_symbol(url: str) -> int:
 def uses_http(url: str) -> int:
     return 1 if url.startswith("http://") else 0
 
-def is_ip_address(url) -> int:
-    parsed = urlparse(url)
-    if parsed.hostname:
-        parts = parsed.hostname.split('.')
-        if len(parts) == 4 and all(part.isdigit() and 0 <= int(part) <= 255 for part in parts):
-            return 1
-    return 0
+def is_ip_address(url: str) -> bool:
+    from urllib.parse import urlparse
+    import ipaddress
+    try:
+        host = urlparse(url).hostname
+        ipaddress.ip_address(host)
+        return True
+    except ValueError:
+        return False
+
 
 def hostname_length(url: str) -> int:
     parsed = urlparse(url)

@@ -3,5 +3,9 @@ uvicorn[standard]
 pydantic
 beautifulsoup4
 httpx
-whois
+python-whois
 dnspython
+tldextract
+asyncio
+ipaddress
+tqdm
